@@ -33,6 +33,15 @@ def get_patients():
 def create_patient(patient: Patient):
     data = read_json(JSON_PATH)
 
+    if patient.get_departement_naissance() != "91":
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Création impossible : seul un patient né dans l'Essonne (91) "
+                f"est accepté. Département détecté : {patient.get_departement_naissance()}."
+            )
+        )
+
     if patient_exists(data, patient.ssn):
         raise HTTPException(
             status_code=400,
@@ -41,6 +50,7 @@ def create_patient(patient: Patient):
 
     data.append(patient.model_dump())
     write_json(JSON_PATH, data)
+
     return {
         "message": "Patient ajouté avec succès.",
         "patient": patient
@@ -48,17 +58,46 @@ def create_patient(patient: Patient):
 
 
 @app.get("/patients/{ssn}")
-def get_patient_by_ssn(ssn: str):
+def get_patient_by_ssn(
+    ssn: str,
+    show_sexe: bool = False,
+    show_annee_naissance: bool = False,
+    show_mois_naissance: bool = False,
+    show_departement_naissance: bool = False,
+    show_numero_insee: bool = False,
+    show_identifiant_enregistrement: bool = False,
+):
     data = read_json(JSON_PATH)
-    patient = find_patient(data, ssn)
+    patient_data = find_patient(data, ssn)
 
-    if patient is None:
+    if patient_data is None:
         raise HTTPException(
             status_code=404,
             detail=f"Aucun patient trouvé avec le ssn {ssn}."
         )
 
-    return patient
+    patient = Patient(**patient_data)
+    response = patient.model_dump()
+
+    if show_sexe:
+        response["sexe"] = patient.get_sexe()
+
+    if show_annee_naissance:
+        response["annee_naissance"] = patient.get_annee_naissance()
+
+    if show_mois_naissance:
+        response["mois_naissance"] = patient.get_mois_naissance()
+
+    if show_departement_naissance:
+        response["departement_naissance"] = patient.get_departement_naissance()
+
+    if show_numero_insee:
+        response["numero_insee"] = patient.get_numero_insee()
+
+    if show_identifiant_enregistrement:
+        response["identifiant_enregistrement"] = patient.get_identifiant_enregistrement()
+
+    return response
 
 
 @app.delete("/patients/{ssn}")

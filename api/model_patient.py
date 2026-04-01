@@ -50,6 +50,12 @@ class Patient(BaseModel):
     def get_departement_naissance(self) -> str:
         return self.ssn[5:7]
 
+    def get_identifiant_pays_naissance(self) -> str:
+        return self.ssn[7:10]
+
+    def get_indice_naissance(self) -> str:
+        return self.ssn[10:13]
+
     def get_numero_insee(self) -> str:
         return self.ssn[:13]
 

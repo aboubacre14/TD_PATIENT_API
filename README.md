@@ -18,28 +18,6 @@ Les données sont stockées dans un fichier JSON partagé entre conteneurs Docke
 - Requests
 - Docker
 - Docker Compose
-
----
-
-# Structure du projet
-TD_PATIENT_API/
-│
-├── api/
-│ ├── app.py
-│ ├── model_patient.py
-│ ├── storage.py
-│ ├── init_json.py
-│ └── patients.json
-│
-├── client/
-│ └── gui.py
-│
-├── Dockerfile.api
-├── Dockerfile.init
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
-
 ---
 
 # Fonctionnalités de l'API
@@ -115,13 +93,13 @@ pip install -r requirements.txt
 
 Lancer le serveur : python -m uvicorn api.app:app --reload --port 3000
 
-Accéder à la documentation Swagger : [text](http://127.0.0.1:3000/docs)
+Accéder à la documentation Swagger : http://127.0.0.1:3000/docs
 
 Lancer avec Docker
 
 Construire et lancer les conteneurs : docker compose up --build
 
-L'API sera accessible sur : [text](http://localhost:3000/docs)
+L'API sera accessible sur : http://localhost:3000/docs
 
 Application cliente
 

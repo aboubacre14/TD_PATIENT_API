@@ -1,15 +1,15 @@
 import os
 from api.storage import write_json
 
-JSON_PATH = "/data/patients.json"
+JSON_PATH = os.getenv("PATIENTS_JSON_PATH", "api/patients.json")
 
 
 def main():
     if not os.path.exists(JSON_PATH):
         write_json(JSON_PATH, [])
-        print("Fichier JSON initialisé.")
+        print(f"Fichier JSON initialisé : {JSON_PATH}")
     else:
-        print("Fichier JSON déjà présent.")
+        print(f"Fichier JSON déjà présent : {JSON_PATH}")
 
 
 if __name__ == "__main__":

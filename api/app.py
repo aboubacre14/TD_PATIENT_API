@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from api.model_patient import Patient
@@ -5,7 +6,7 @@ from api.storage import read_json, write_json
 
 app = FastAPI()
 
-JSON_PATH = "/data/patients.json"
+JSON_PATH = os.getenv("PATIENTS_JSON_PATH", "api/patients.json")
 
 
 class PatientUpdate(BaseModel):

@@ -1,6 +1,8 @@
 import tkinter as tk
+import json
 from tkinter import messagebox
 import requests
+
 
 API_URL = "http://127.0.0.1:3000"
 
@@ -38,21 +40,29 @@ class Application(tk.Tk):
         tk.Button(button_frame, text="Add", command=self.add_value).grid(row=0, column=1, padx=5)
         tk.Button(button_frame, text="Update", command=self.update_value).grid(row=0, column=2, padx=5)
 
-        self.read_data()
-
     def display_output(self, content):
         self.output.delete("1.0", tk.END)
         self.output.insert(tk.END, content)
 
+   
     def read_data(self):
         """Read through GET"""
         try:
             response = requests.get(f"{API_URL}/patients")
-            response.raise_for_status()
+            if response.status_code >= 400:
+                try:
+                    detail = response.json().get("detail", response.text)
+                except Exception:
+                    detail = response.text
+                raise ValueError(detail)
+
             data = response.json()
-            self.display_output(str(data))
-        except requests.RequestException as exc:
-            messagebox.showerror("Erreur GET", f"Impossible de lire les données : {exc}")
+            self.display_output(json.dumps(data, indent=4, ensure_ascii=False))
+        except Exception as exc:
+            messagebox.showerror(
+                "Erreur GET",
+                f"Impossible de lire les données.\nCause probable : {exc}"
+            )
 
     def add_value(self):
         """Add through POST"""
@@ -77,7 +87,7 @@ class Application(tk.Tk):
                 raise ValueError(detail)
 
             data = response.json()
-            self.display_output(str(data))
+            self.display_output(json.dumps(data, indent=4, ensure_ascii=False))
             self.read_data()
         except Exception as exc:
             messagebox.showerror("Erreur POST", f"Impossible d'ajouter le patient : {exc}")
@@ -109,7 +119,7 @@ class Application(tk.Tk):
                 raise ValueError(detail)
 
             data = response.json()
-            self.display_output(str(data))
+            self.display_output(json.dumps(data, indent=4, ensure_ascii=False))
             self.read_data()
         except Exception as exc:
             messagebox.showerror("Erreur PATCH", f"Impossible de modifier le patient : {exc}")

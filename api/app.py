@@ -5,7 +5,7 @@ from api.storage import read_json, write_json
 
 app = FastAPI()
 
-JSON_PATH = "api/patients.json"
+JSON_PATH = "/data/patients.json"
 
 
 class PatientUpdate(BaseModel):

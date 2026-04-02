@@ -115,13 +115,13 @@ pip install -r requirements.txt
 
 Lancer le serveur : python -m uvicorn api.app:app --reload --port 3000
 
-Accéder à la documentation Swagger : [text](http://127.0.0.1:3000/docs)
+Accéder à la documentation Swagger : http://127.0.0.1:3000/docs
 
 Lancer avec Docker
 
 Construire et lancer les conteneurs : docker compose up --build
 
-L'API sera accessible sur : [text](http://localhost:3000/docs)
+L'API sera accessible sur : http://localhost:3000/docs
 
 Application cliente
 

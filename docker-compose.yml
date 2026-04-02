@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  init_json:
+    build:
+      context: .
+      dockerfile: Dockerfile.init
+    container_name: init_json
+    volumes:
+      - patients_data:/data
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: patient_api
+    depends_on:
+      - init_json
+    ports:
+      - "3000:3000"
+    volumes:
+      - patients_data:/data
+
+volumes:
+  patients_data:
